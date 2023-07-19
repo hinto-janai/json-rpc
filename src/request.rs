@@ -8,18 +8,22 @@ use serde_json::value::Value;
 //---------------------------------------------------------------------------------------------------- Request
 /// JSON-RPC 2.0 Request object
 #[derive(Debug,Clone,Deserialize,Serialize)]
-pub struct Request<'a> {
+pub struct Request<'a, M, P>
+where
+	M: Clone,
+	P: Clone,
+{
 	/// JSON-RPC 2.0
     pub jsonrpc: Version,
 
 	#[serde(borrow)]
     /// A String containing the name of the method to be invoked
-    pub method: Cow<'a, str>,
+    pub method: Cow<'a, M>,
 
 	#[serde(borrow)]
     #[serde(skip_serializing_if = "Option::is_none")]
     /// A Structured value that holds the parameter values to be used during the invocation of the method
-    pub params: Option<Cow<'a, Value>>,
+    pub params: Option<Cow<'a, P>>,
 
 	#[serde(borrow)]
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -29,12 +33,16 @@ pub struct Request<'a> {
     pub id: Option<Id<'a>>,
 }
 
-impl<'a> Request<'a> {
+impl<'a, M, P> Request<'a, M, P>
+where
+	M: Clone,
+	P: Clone,
+{
 	#[inline]
 	/// Create a new [`Self`].
 	pub fn new(
-		method: Cow<'a, str>,
-		params: Option<Cow<'a, Value>>,
+		method: Cow<'a, M>,
+		params: Option<Cow<'a, P>>,
 		id: Option<Id<'a>>,
 	) -> Self {
 		Self {
@@ -53,7 +61,7 @@ impl<'a> Request<'a> {
 
 	#[inline]
 	/// Convert `Self<'a>` to `Self<'static>`
-	pub fn into_owned(self) -> Request<'static> {
+	pub fn into_owned(self) -> Request<'static, M, P> {
 		Request {
 			jsonrpc: self.jsonrpc,
 			method: Cow::Owned(self.method.into_owned()),
@@ -64,7 +72,11 @@ impl<'a> Request<'a> {
 }
 
 //---------------------------------------------------------------------------------------------------- Trait impl
-impl<'a> std::fmt::Display for Request<'_> {
+impl<'a, M, P> std::fmt::Display for Request<'_, M, P>
+where
+	M: Clone + std::fmt::Display + Serialize,
+	P: Clone + std::fmt::Display + Serialize,
+{
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		match serde_json::to_string_pretty(self) {
 			Ok(json) => write!(f, "{json}"),
@@ -73,7 +85,11 @@ impl<'a> std::fmt::Display for Request<'_> {
 	}
 }
 
-impl<'a> PartialEq for Request<'_> {
+impl<'a, M, P> PartialEq for Request<'_, M, P>
+where
+	M: Clone + PartialEq,
+	P: Clone + PartialEq,
+{
 	fn eq(&self, other: &Self) -> bool {
 		let this_v = self.params.as_ref().map(|r| r);
 		let other_v = other.params.as_ref().map(|r| r);
@@ -89,7 +105,7 @@ mod test {
 	#[test]
 	fn serde() {
 		let method = String::from("a_method");
-		let params = serde_json::json!("[0, 1, 2]");
+		let params = [0, 1, 2];
 		let id     = Id::Num(123);
 
 		let r = Request::new(
@@ -101,9 +117,9 @@ mod test {
 		assert!(!r.is_notification());
 
 		let s: String = serde_json::to_string(&r).unwrap();
-		let d: Request = serde_json::from_str(&s).unwrap();
+		let d: Request<&str, [u8; 3]> = serde_json::from_str(&s).unwrap();
 
-		assert_eq!(d.method, method);
+		assert_eq!(d.method.as_ref(), &method);
 		assert_eq!(d.params.unwrap().as_ref(), &params);
 		assert_eq!(d.id.unwrap(), id);
 	}

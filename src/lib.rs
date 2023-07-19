@@ -81,9 +81,9 @@ mod tests {
 			"params": [0, 1, 2],
 			"id": 123,
 		});
-		let request1 = Request::new(
-			"method_1".into(),
-			Some(Cow::Owned(json! { [0, 1, 2] } )),
+		let request1: Request<&str, [u8; 3]> = Request::new(
+			Cow::Borrowed(&"method_1"),
+			Some(Cow::Borrowed(&[0, 1, 2])),
 			Some(Id::Num(123)),
 		);
 
@@ -94,11 +94,11 @@ mod tests {
 		let expected_request2 = json!({
 			"jsonrpc": "2.0",
 			"method": "method_2",
-			"params": "string",
+			"params": [2, 3, 4],
 		});
-		let request2 = Request::new(
-			"method_2".into(),
-			Some(Cow::Owned(json! { "string" } )),
+		let request2: Request<&str, [u8; 3]> = Request::new(
+			Cow::Borrowed(&"method_2"),
+			Some(Cow::Borrowed(&[2, 3, 4])),
 			None,
 		);
 
@@ -111,8 +111,8 @@ mod tests {
 			"method": "method_3",
 			"id": "string_id",
 		});
-		let request3 = Request::new(
-			"method_3".into(),
+		let request3: Request<&str, ()> = Request::new(
+			Cow::Borrowed(&"method_3"),
 			None,
 			Some(Id::Str("string_id".into())),
 		);
@@ -154,7 +154,7 @@ mod tests {
 
 				// Assert received bytes are the same as expected.
 				stream.read_to_end(&mut vec);
-				let json: Request = from_slice(&vec).unwrap();
+				let json: Request<&str, [u8; 3]> = from_slice(&vec).unwrap();
 				assert_eq!(i, to_value(&json).unwrap());
 
 				// Return a `Response`.
