@@ -42,6 +42,21 @@ impl<'a> ErrorObject<'_> {
 		}
 	}
 
+	/// [`PARSE_ERROR`]
+	pub const fn parse_error() -> Self { Self { code: ErrorCode::ServerError(PARSE_ERROR.0), message: Cow::Borrowed(PARSE_ERROR.1), data: None, } }
+
+	/// [`INVALID_REQUEST`]
+	pub const fn invalid_request() -> Self { Self { code: ErrorCode::ServerError(INVALID_REQUEST.0), message: Cow::Borrowed(INVALID_REQUEST.1), data: None, } }
+
+	/// [`METHOD_NOT_FOUND`]
+	pub const fn method_not_found() -> Self { Self { code: ErrorCode::ServerError(METHOD_NOT_FOUND.0), message: Cow::Borrowed(METHOD_NOT_FOUND.1), data: None, } }
+
+	/// [`INVALID_PARAMS`]
+	pub const fn invalid_params() -> Self { Self { code: ErrorCode::ServerError(INVALID_PARAMS.0), message: Cow::Borrowed(INVALID_PARAMS.1), data: None, } }
+
+	/// [`INTERNAL_ERROR`]
+	pub const fn internal_error() -> Self { Self { code: ErrorCode::ServerError(INTERNAL_ERROR.0), message: Cow::Borrowed(INTERNAL_ERROR.1), data: None, } }
+
 	/// [`UNKNOWN_ERROR`]
 	pub const fn unknown_error() -> Self { Self { code: ErrorCode::ServerError(UNKNOWN_ERROR.0), message: Cow::Borrowed(UNKNOWN_ERROR.1), data: None, } }
 

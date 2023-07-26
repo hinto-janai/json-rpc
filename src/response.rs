@@ -61,6 +61,126 @@ where
 			id: self.id.map(|id| id.into_owned()),
 		}
 	}
+
+	#[inline]
+	/// [`PARSE_ERROR`]
+	pub const fn parse_error(id: Option<Id<'a>>) -> Self {
+		Self {
+			jsonrpc: Version,
+			payload: Err(ErrorObject::parse_error()),
+			id,
+		}
+	}
+
+	#[inline]
+	/// [`INVALID_REQUEST`]
+	pub const fn invalid_request(id: Option<Id<'a>>) -> Self {
+		Self {
+			jsonrpc: Version,
+			payload: Err(ErrorObject::invalid_request()),
+			id,
+		}
+	}
+
+	#[inline]
+	/// [`METHOD_NOT_FOUND`]
+	pub const fn method_not_found(id: Option<Id<'a>>) -> Self {
+		Self {
+			jsonrpc: Version,
+			payload: Err(ErrorObject::method_not_found()),
+			id,
+		}
+	}
+
+	#[inline]
+	/// [`INVALID_PARAMS`]
+	pub const fn invalid_params(id: Option<Id<'a>>) -> Self {
+		Self {
+			jsonrpc: Version,
+			payload: Err(ErrorObject::invalid_params()),
+			id,
+		}
+	}
+
+	#[inline]
+	/// [`INTERNAL_ERROR`]
+	pub const fn internal_error(id: Option<Id<'a>>) -> Self {
+		Self {
+			jsonrpc: Version,
+			payload: Err(ErrorObject::internal_error()),
+			id,
+		}
+	}
+
+	#[inline]
+	/// [`UNKNOWN_ERROR`]
+	pub const fn unknown_error(id: Option<Id<'a>>) -> Self {
+		Self {
+			jsonrpc: Version,
+			payload: Err(ErrorObject::unknown_error()),
+			id,
+		}
+	}
+
+	#[inline]
+	/// [`BATCH_NOT_SUPPORTED`]
+	pub const fn batch_not_supported(id: Option<Id<'a>>) -> Self {
+		Self {
+			jsonrpc: Version,
+			payload: Err(ErrorObject::batch_not_supported()),
+			id,
+		}
+	}
+
+	#[inline]
+	/// [`OVERSIZED_REQUEST`]
+	pub const fn oversized_request(id: Option<Id<'a>>) -> Self {
+		Self {
+			jsonrpc: Version,
+			payload: Err(ErrorObject::oversized_request()),
+			id,
+		}
+	}
+
+	#[inline]
+	/// [`OVERSIZED_RESPONSE`]
+	pub const fn oversized_response(id: Option<Id<'a>>) -> Self {
+		Self {
+			jsonrpc: Version,
+			payload: Err(ErrorObject::oversized_response()),
+			id,
+		}
+	}
+
+	#[inline]
+	/// [`OVERSIZED_BATCH_REQUEST`]
+	pub const fn oversized_batch_request(id: Option<Id<'a>>) -> Self {
+		Self {
+			jsonrpc: Version,
+			payload: Err(ErrorObject::oversized_batch_request()),
+			id,
+		}
+	}
+
+	#[inline]
+	/// [`OVERSIZED_BATCH_REQUEST`]
+	pub const fn oversized_batch_response(id: Option<Id<'a>>) -> Self {
+		Self {
+			jsonrpc: Version,
+			payload: Err(ErrorObject::oversized_batch_response()),
+			id,
+		}
+	}
+
+	#[inline]
+	/// [`SERVER_IS_BUSY`]
+	pub const fn server_is_busy(id: Option<Id<'a>>) -> Self {
+		Self {
+			jsonrpc: Version,
+			payload: Err(ErrorObject::server_is_busy()),
+			id,
+		}
+	}
 }
 
 //---------------------------------------------------------------------------------------------------- Trait impl
