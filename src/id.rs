@@ -66,6 +66,58 @@ impl<'a> Id<'_> {
 	}
 }
 
+impl Id<'static> {
+	fn from_string(s: String) -> Id<'static> {
+		if let Ok(u) = s.parse::<u64>() {
+			return Self::Num(u);
+		}
+
+		match s.as_str() {
+			"null"|"Null"|"NULL" => Self::Null,
+			_ => Self::Str(Cow::Owned(s.into()))
+		}
+	}
+}
+
+impl std::str::FromStr for Id<'static> {
+	type Err = std::convert::Infallible;
+
+	fn from_str(s: &str) -> Result<Self, std::convert::Infallible> {
+		Ok(Self::from_string(s.to_string()))
+	}
+}
+
+impl From<String> for Id<'static> {
+	fn from(s: String) -> Self {
+		Self::from_string(s)
+	}
+}
+
+impl From<&str> for Id<'static> {
+	fn from(s: &str) -> Self {
+		Self::from_string(s.to_string())
+	}
+}
+
+macro_rules! impl_u {
+	($($u:ty),*) => {
+		$(
+			impl From<$u> for Id<'static> {
+				fn from(u: $u) -> Self {
+					Self::Num(u as u64)
+				}
+			}
+			impl From<&$u> for Id<'static> {
+				fn from(u: &$u) -> Self {
+					Self::Num(*u as u64)
+				}
+			}
+		)*
+	}
+}
+
+impl_u!(u8,u16,u32,u64,i8,i16,i32,i64,f32,f64);
+
 //---------------------------------------------------------------------------------------------------- TESTS
 mod test {
 	use super::*;
