@@ -1,9 +1,15 @@
 [package]
-name = "json-rpc"
-version = "0.1.2"
-edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+name           = "json-rpc"
+version        = "0.1.2"
+edition        = "2021"
+authors        = ["hinto.janai <hinto.janai@protonmail.com>"]
+documentation  = "https://docs.rs/json-rpc"
+repository     = "https://github.com/hinto-janai/json-rpc"
+keywords       = ["json", "rpc"]
+categories     = ["encoding"]
+readme         = "README.md"
+license        = "MIT"
+description    = "JSON-RPC 2.0 Implementation"
 
 [dependencies]
 serde      = { version = "1", features = ["derive"] }
